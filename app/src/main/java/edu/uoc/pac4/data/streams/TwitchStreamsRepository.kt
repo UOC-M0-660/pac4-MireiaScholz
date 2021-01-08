@@ -19,9 +19,8 @@ class TwitchStreamsRepository(
             val nextCursor = response.pagination?.cursor
 
             return Pair(nextCursor, streams)
+        } ?: run {
+            return Pair(null, listOf())
         }
-
-        return Pair(null, listOf())
     }
-
 }

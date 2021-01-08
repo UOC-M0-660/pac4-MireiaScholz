@@ -1,21 +1,39 @@
 package edu.uoc.pac4.data.oauth
 
+import android.util.Log
+import edu.uoc.pac4.data.SessionManager
+
 /**
  * Created by alex on 11/21/20.
  */
 class OAuthAuthenticationRepository(
-    // TODO: Add any datasources you may need
+    private val oAuthTokenDataSource: OAuthDataSource,
+    private val sessionManager: SessionManager
 ) : AuthenticationRepository {
 
-    override suspend fun isUserAvailable(): Boolean {
-        TODO("Not yet implemented")
+    override fun isUserAvailable(): Boolean {
+        return sessionManager.isUserAvailable()
     }
 
     override suspend fun login(authorizationCode: String): Boolean {
-        TODO("Not yet implemented")
+        // Launch get Tokens Request
+        val tokens: OAuthTokensResponse? = oAuthTokenDataSource.getTokens(authorizationCode)
+        tokens?.let { response ->
+            Log.d("OAuthRepository", "Got Access token ${response.accessToken}")
+
+            // Save access token and refresh token using the SessionManager class
+            sessionManager.saveAccessToken(response.accessToken)
+            response.refreshToken?.let {
+                sessionManager.saveRefreshToken(it)
+            }
+            return true
+        } ?: run {
+            return false
+        }
     }
 
-    override suspend fun logout() {
-        TODO("Not yet implemented")
+    override fun logout() {
+        sessionManager.clearAccessToken()
+        sessionManager.clearRefreshToken()
     }
 }
