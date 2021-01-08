@@ -1,4 +1,4 @@
-package edu.uoc.pac4.data.streams
+package edu.uoc.pac4.data.user
 
 import android.util.Log
 import edu.uoc.pac4.data.network.Endpoints
@@ -7,18 +7,17 @@ import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.request.*
 
-class StreamDataSource(private val httpClient: HttpClient) {
 
+class UserDataSource(private val httpClient: HttpClient) {
     @Throws(UnauthorizedException::class)
-    suspend fun getStreams(cursor: String? = null): StreamsResponse? {
+    suspend fun getUser(): User? {
         try {
             val response = httpClient
-                .get<StreamsResponse>(Endpoints.streamsUrl) {
-                    cursor?.let { parameter("after", it) }
-                }
-            return response
+                .get<UsersResponse>(Endpoints.usersUrl)
+
+            return response.data?.firstOrNull()
         } catch (t: Throwable) {
-            Log.w("StreamsDataSource", "Error getting streams", t)
+            Log.w("UserDataSource", "Error getting user", t)
             // Try to handle error
             return when (t) {
                 is ClientRequestException -> {
