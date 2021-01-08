@@ -78,20 +78,20 @@ class ProfileActivity : AppCompatActivity() {
     private suspend fun updateUserDescription(description: String) {
         progressBar.visibility = VISIBLE
         // Update the Twitch User Description using the API
-//        try {
-//            twitchApiService.updateUserDescription(description)?.let { user ->
-//                // Success :)
-//                // Update the UI with the user data
-//                setUserInfo(user)
-//            } ?: run {
-//                // Error :(
-//                showError(getString(R.string.error_profile))
-//            }
-//            // Hide Loading
-//            progressBar.visibility = GONE
-//        } catch (t: UnauthorizedException) {
-//            onUnauthorized()
-//        }
+        try {
+            twitchUserRepository.updateUser(description)?.let { user ->
+                // Success :)
+                // Update the UI with the user data
+                setUserInfo(user)
+            } ?: run {
+                // Error :(
+                showError(getString(R.string.error_profile))
+            }
+            // Hide Loading
+            progressBar.visibility = GONE
+        } catch (t: UnauthorizedException) {
+            onUnauthorized()
+        }
     }
 
     private fun setUserInfo(user: User) {
