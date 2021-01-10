@@ -122,3 +122,33 @@ Para aplicar inyección de dependencias de forma manual en un proyecto, debemos:
   1.  En la clase en la que vayamos a inyectar sus dependencias, debemos crear un constructor que reciba tantos argumentos como dependencias necesite, y dentro del constructor asignarlo a los atributos de la clase correspondiente. Si fuera necesario realizar alguna lógica o conversión adicional, podríamos considerar crear un método de factoría.
   2. Desde cada punto del código en el que queramos crear una nueva instancia de nuestra clase, debemos previamente instanciar cada una de las dependencias que ésta necesita.
   3. Para crear cada nueva instancia de nuestra clase, utilizamos el constructor o método de factoría que creamos en el paso 1 y le pasamos cada una de las dependencias que acabamos de instanciar en el paso 2 en el mismo orden.
+  
+  
+
+---
+
+### Análisis de código estático
+
+#### Ejecuta Lint al proyecto final mediante Analyze> Inspect Code. Haz una lista con 5 warnings/errores y explica de qué problema te avisan y cómo corregirlos.
+
+Tras ejecutar el lint de Android Studio en todo el proyecto, aparece una lista con diferentes elementos desplegables que representan una categoría diferente de avisos. Por ejemplo Android, Kotlin... Todos son warnings y no hay ningún error. Estos son 5 de los warnings que aparecen:
+
+-  Android - Correctness: Obsolete Grade Dependency
+    
+    Este warning nos avisa de que hay una versión más reciente para una dependencia que se encuentra en nuestro fichero build.grade. Para corregirlo, podemos hacer doble click sobre el warning. En los IDEs de IDEA, y en Android Studio pues está basado en IntelliJ, si hacemos ctrl+Enter sobre un warning, podremos ver cómo nos sugiere el IDE corregirlo. En este caso, nos sugiere la última versión de la librería que tengamos desactualizada.
+    
+- Android - Accessibility: Image without content description
+
+    Este warning nos avisa de que tenemos vistas de imágenes (ImageViews) sin el atributo content description, que son una ayuda de accesibilidad para los usuarios que necesiten utilizar lectores de pantalla u otras herramientas similares. Para corregirlo, de nuevo, podemos hacer ctrl+Enter en el ImageView para que el IDE nos añada el atributo, y solamente tendremos que añadir el texto que describe la imagen.
+    
+- Android - Performance: Overdraw: Painting regions more than once
+
+    Este warning nos avisa de que la View padre, en este caso NestedScrollView, tiene un atributo que pinta el background de blanco, y que la theme que aplica también lo hace. Para corregirlo, podemos eliminar el atributo de la vista.
+
+- Kotlin - Redundant Constructors: Remove empty primary constructor
+
+    Este warning nos indica que el constructor vacío en `class StreamsActivity() : AppCompatActivity() {` no es necesario. Para corregiro, podemos quitar los paréntesis que hay después del nombre de la clase.
+    
+- Kotlin - Unnecesary local variable: Variable used only in following return and should be inlined
+
+    Este warning nos indica que una variable local solo se utiliza para devolverla en la línea siguiente y que podemos aplicar el Refactor Inline (ctrl+alt+N) para aplicarlo. Sin embargo, hay ocasiones en las que es posible que no queramos aplicar esta sugerencia si el nombre de la variable ayuda a entender el código aportando semántica al mismo.
