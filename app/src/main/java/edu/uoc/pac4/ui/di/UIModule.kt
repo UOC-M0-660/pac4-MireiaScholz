@@ -1,5 +1,9 @@
 package edu.uoc.pac4.ui.di
 
+import edu.uoc.pac4.ui.LaunchViewModel
+import edu.uoc.pac4.ui.login.oauth.AuthenticationViewModel
+import edu.uoc.pac4.ui.profile.ProfileViewModel
+import edu.uoc.pac4.ui.streams.StreamsViewModel
 import org.koin.dsl.module
 
 /**
@@ -7,8 +11,10 @@ import org.koin.dsl.module
  */
 
 val uiModule = module {
-    // TODO: Init your UI Dependencies
 
-    // LaunchViewModel example
-    // viewModel { LaunchViewModel(repository = get()) }
+    single { StreamsViewModel(streamsRepository = get()) }
+    single { ProfileViewModel(twitchUserRepository = get(), authenticationRepository = get()) }
+    single { LaunchViewModel(repository = get()) }
+    single { AuthenticationViewModel(authenticationRepository = get()) }
+
 }

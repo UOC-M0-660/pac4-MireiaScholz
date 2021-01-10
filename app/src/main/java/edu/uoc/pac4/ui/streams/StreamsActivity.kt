@@ -12,7 +12,6 @@ import edu.uoc.pac4.R
 import edu.uoc.pac4.data.SessionManager
 import edu.uoc.pac4.data.network.UnauthorizedException
 import edu.uoc.pac4.data.streams.Stream
-import edu.uoc.pac4.data.streams.StreamsRepository
 import edu.uoc.pac4.ui.login.LoginActivity
 import edu.uoc.pac4.ui.profile.ProfileActivity
 import kotlinx.android.synthetic.main.activity_streams.*
@@ -25,7 +24,7 @@ class StreamsActivity : AppCompatActivity() {
 
     private val adapter = StreamsAdapter()
     private val layoutManager = LinearLayoutManager(this)
-    private val streamsRepository: StreamsRepository by inject()
+    private val streamsViewModel: StreamsViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +71,7 @@ class StreamsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
 
-                val (newCursor: String?, streams: List<Stream>) = streamsRepository.getStreams(cursor)
+                val (newCursor: String?, streams: List<Stream>) = streamsViewModel.getStreams(cursor)
 
                 Log.d("StreamsActivity", "Got Streams: $streams")
 

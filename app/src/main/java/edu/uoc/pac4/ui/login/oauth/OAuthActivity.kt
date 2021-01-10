@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import edu.uoc.pac4.R
 import edu.uoc.pac4.data.network.Endpoints
-import edu.uoc.pac4.data.oauth.AuthenticationRepository
 import edu.uoc.pac4.data.oauth.OAuthConstants
 import edu.uoc.pac4.ui.LaunchActivity
 import kotlinx.android.synthetic.main.activity_oauth.*
@@ -23,7 +22,7 @@ import org.koin.android.ext.android.inject
 class OAuthActivity : AppCompatActivity() {
 
     private val TAG = "StreamsActivity"
-    private val authenticationRepository: AuthenticationRepository by inject()
+    private val authenticationViewModel: AuthenticationViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,7 +94,7 @@ class OAuthActivity : AppCompatActivity() {
         // Launch new thread attached to this Activity.
         // If the Activity is closed, this Thread will be cancelled
         lifecycleScope.launch {
-            if (!authenticationRepository.login(authorizationCode)) {
+            if (!authenticationViewModel.login(authorizationCode)) {
                 // Failure :(
 
                 // Show Error Message
