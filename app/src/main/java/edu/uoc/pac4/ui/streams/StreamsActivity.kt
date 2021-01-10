@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_streams.*
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
-class StreamsActivity() : AppCompatActivity() {
+class StreamsActivity : AppCompatActivity() {
 
     private val TAG = "StreamsActivity"
 
