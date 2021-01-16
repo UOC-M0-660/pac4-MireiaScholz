@@ -22,4 +22,7 @@
     <string name="error_streams">Error getting Streams</string>
     <string name="error_profile">Error getting Profile</string>
     <string name="error_profile_update">Error updating profile</string>
+    <string name="user_profile_image">User profile image</string>
+    <string name="eye_icon_to_represent_number_of_views">Eye icon to represent number of views</string>
+    <string name="stream_preview_image">Stream preview image</string>
 </resources>

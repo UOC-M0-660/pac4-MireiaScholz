@@ -5,19 +5,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import edu.uoc.pac4.R
 import edu.uoc.pac4.data.SessionManager
-import edu.uoc.pac4.data.TwitchApiService
-import edu.uoc.pac4.data.network.Network
 import edu.uoc.pac4.data.network.UnauthorizedException
+import edu.uoc.pac4.data.streams.Stream
 import edu.uoc.pac4.ui.login.LoginActivity
 import edu.uoc.pac4.ui.profile.ProfileActivity
 import kotlinx.android.synthetic.main.activity_streams.*
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class StreamsActivity : AppCompatActivity() {
 
@@ -25,8 +24,7 @@ class StreamsActivity : AppCompatActivity() {
 
     private val adapter = StreamsAdapter()
     private val layoutManager = LinearLayoutManager(this)
-
-    private val twitchApiService = TwitchApiService(Network.createHttpClient(this))
+    private val streamsViewModel: StreamsViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,33 +70,21 @@ class StreamsActivity : AppCompatActivity() {
         // Get Twitch Streams
         lifecycleScope.launch {
             try {
-                twitchApiService.getStreams(cursor)?.let { response ->
-                    // Success :)
-                    Log.d("StreamsActivity", "Got Streams: $response")
 
-                    val streams = response.data.orEmpty()
-                    // Update UI with Streams
-                    if (cursor != null) {
-                        // We are adding more items to the list
-                        adapter.submitList(adapter.currentList.plus(streams))
-                    } else {
-                        // It's the first n items, no pagination yet
-                        adapter.submitList(streams)
-                    }
-                    // Save cursor for next request
-                    nextCursor = response.pagination?.cursor
+                val (newCursor: String?, streams: List<Stream>) = streamsViewModel.getStreams(cursor)
 
-                } ?: run {
-                    // Error :(
+                Log.d("StreamsActivity", "Got Streams: $streams")
 
-                    // Show Error message to not leave the page empty
-                    if (adapter.currentList.isNullOrEmpty()) {
-                        Toast.makeText(
-                            this@StreamsActivity,
-                            getString(R.string.error_streams), Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                // Update UI with Streams
+                if (cursor != null) {
+                    adapter.submitList(adapter.currentList.plus(streams))
+                } else {
+                    // It's the first n items, no pagination yet
+                    adapter.submitList(streams)
                 }
+                // Save cursor for next request
+                nextCursor = newCursor
+
                 // Hide Loading
                 swipeRefreshLayout.isRefreshing = false
 
